@@ -2,9 +2,15 @@ import { useState } from "react";
 
 function App() {
   const [city, setCity] = useState("");
+  const [submittedCity, setSubmittedCity] = useState("");
 
-  function handleCityChange(event) {
-    setCity(event.target.value);
+  function handleSubmit(event) {
+    event.preventDefault();
+
+    const trimmed = city.trim();
+    if (!trimmed) return;
+
+    setSubmittedCity(trimmed);
   }
 
   return (
@@ -15,14 +21,17 @@ function App() {
         city.
       </p>
 
-      <input
-        type="text"
-        placeholder="Enter a city name"
-        value={city}
-        onChange={handleCityChange}
-      />
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          placeholder="Enter a city name"
+          value={city}
+          onChange={(e) => setCity(e.target.value)}
+        />
+        <button type="submit">Search</button>
+      </form>
 
-      <p>City: {city}</p>
+      {submittedCity && <p>Searching for: {submittedCity}</p>}
     </div>
   );
 }
