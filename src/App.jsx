@@ -1,8 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function App() {
   const [city, setCity] = useState("");
   const [submittedCity, setSubmittedCity] = useState("");
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [weather, setWeather] = useState(null);
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -12,6 +16,61 @@ function App() {
 
     setSubmittedCity(trimmed);
   }
+
+  useEffect(() => {
+    if (!submittedCity) return;
+
+    async function fetchWeather() {
+      setLoading(true);
+      setError("");
+      setWeather(null);
+
+      try {
+        // 1) Geocode city -> lat/lon
+        const geoRes = await fetch(
+          `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(
+            submittedCity
+          )}&count=1&language=en&format=json`
+        );
+
+        if (!geoRes.ok) {
+          throw new Error("Geocoding request failed.");
+        }
+
+        const geoData = await geoRes.json();
+        const first = geoData?.results?.[0];
+
+        if (!first) {
+          throw new Error("City not found. Try another name.");
+        }
+
+        const { latitude, longitude, name, country } = first;
+
+        // 2) Fetch forecast (includes current weather + daily highs/lows)
+        const weatherRes = await fetch(
+          `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current_weather=true&daily=temperature_2m_max,temperature_2m_min&timezone=auto`
+        );
+
+        if (!weatherRes.ok) {
+          throw new Error("Weather request failed.");
+        }
+
+        const weatherData = await weatherRes.json();
+
+        setWeather({
+          locationName: `${name}, ${country}`,
+          current: weatherData.current_weather,
+          daily: weatherData.daily,
+        });
+      } catch (err) {
+        setError(err.message || "Something went wrong.");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchWeather();
+  }, [submittedCity]);
 
   return (
     <div>
@@ -28,10 +87,38 @@ function App() {
           value={city}
           onChange={(e) => setCity(e.target.value)}
         />
-        <button type="submit">Search</button>
+        <button type="submit" disabled={loading}>
+          {loading ? "Searching..." : "Search"}
+        </button>
       </form>
 
       {submittedCity && <p>Searching for: {submittedCity}</p>}
+
+      {error && <p style={{ color: "crimson" }}>Error: {error}</p>}
+
+      {weather && (
+        <div style={{ marginTop: 16 }}>
+          <h2>{weather.locationName}</h2>
+
+          <p>
+            <strong>Current temperature:</strong>{" "}
+            {weather.current.temperature}°C
+          </p>
+          <p>
+            <strong>Wind:</strong> {weather.current.windspeed} km/h
+          </p>
+
+          <h3>Next days</h3>
+          <ul>
+            {weather.daily.time.slice(0, 5).map((date, idx) => (
+              <li key={date}>
+                {date}: {weather.daily.temperature_2m_min[idx]}°C –{" "}
+                {weather.daily.temperature_2m_max[idx]}°C
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }
