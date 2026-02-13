@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import "./App.css";
 
 function App() {
   const [city, setCity] = useState("");
@@ -15,6 +16,8 @@ function App() {
     if (!trimmed) return;
 
     setSubmittedCity(trimmed);
+    setCity("");
+    setError("");
   }
 
   useEffect(() => {
@@ -73,7 +76,7 @@ function App() {
   }, [submittedCity]);
 
   return (
-    <div>
+    <div className="app-container">
       <h1>Weather Dashboard</h1>
       <p>
         This app helps users quickly check current and upcoming weather for any
@@ -92,12 +95,16 @@ function App() {
         </button>
       </form>
 
+      {!submittedCity && !loading && !error && !weather && (
+        <p>Type a city and click Search to see the forecast.</p>
+      )}
+
       {submittedCity && <p>Searching for: {submittedCity}</p>}
 
       {error && <p style={{ color: "crimson" }}>Error: {error}</p>}
 
       {weather && (
-        <div style={{ marginTop: 16 }}>
+        <div className="weather-card">
           <h2>{weather.locationName}</h2>
 
           <p>
