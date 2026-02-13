@@ -49,3 +49,21 @@ button:hover {
   background: #f9fafb;
   border-radius: 8px;
 }
+
+.nav {
+  max-width: 700px;
+  margin: 20px auto 0;
+  padding: 0 30px;
+  display: flex;
+  gap: 12px;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #2563eb;
+  font-weight: 600;
+}
+
+.nav-link.active {
+  text-decoration: underline;
+}
