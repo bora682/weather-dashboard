@@ -1,8 +1,51 @@
-# React + Vite
+# Weather Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React + Vite single page application (SPA) that allows users to search for a city and view current weather plus a short multi-day forecast.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Search for any city by name
+- Displays current temperature and wind speed
+- Shows upcoming daily high and low temperature
+- Handles errors (e.g., city not found)
+- Multi-page navigation using React Router (Home, About, Help)
+
+## APIs used
+
+- **Open-Meteo Geocoding API**  
+  Converts city name into latitude and longitude.
+
+- **Open-Meteo Forecast API**  
+  Returns current weather and daily forecast data.
+
+## Tech Stack
+
+- React
+- Vite
+- React Router DOM
+
+## Installation
+
+Clone the repository:
+
+```bash
+git clone https://github.com/bora682/weather-dashboard.git
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start development server:
+```
+npm run dev
+```
+
+Open the local URL shown in your terminal (for example: http://localhost:5174/)
+
+## Routes
+- `/` -> Home (Search and weather display)
+- `/about` -> About page
+- `/help` -> Help / usage instructions
