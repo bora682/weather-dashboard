@@ -13,10 +13,13 @@ A React + Vite single page application (SPA) that allows users to search for a c
 ## APIs used
 
 - **Open-Meteo Geocoding API**  
-  Converts city name into latitude and longitude.
+  Converts city name into latitude and longitude. 
+  Endpoint: `https://geocoding-api.open-meteo.com/v1/search`
 
 - **Open-Meteo Forecast API**  
-  Returns current weather and daily forecast data.
+  Returns current weather and daily forecast data. 
+  Endpoint: `https://api.open-meteo.com/v1/forecast`
+  
 
 ## Tech Stack
 
