@@ -1,5 +1,8 @@
 # Weather Dashboard
 
+## Live Demo
+https://bora-weather-dashboard.netlify.app
+
 A React + Vite single page application (SPA) that allows users to search for a city and view current weather plus a short multi-day forecast.
 
 ## Features
